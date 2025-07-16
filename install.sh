@@ -115,7 +115,7 @@ setup_api_key() {
         read -r api_key
         
         if [[ -z "$api_key" ]]; then
-            log_warn "Skipping API key setup. You can set it later with: echo 'sk-your-key' > $CONFIG_DIR/api_key"
+            log_warn "Skipping API key setup. You can set it later with: echo 'YOUR_API_KEY' > $CONFIG_DIR/api_key"
             break
         elif [[ "$api_key" =~ ^sk- ]]; then
             # Save to both api_key file and .env file
@@ -124,7 +124,7 @@ setup_api_key() {
             
             # Create .env file from template
             cp "$TOOLS_DIR/config/.env.example" "$CONFIG_DIR/.env"
-            sed -i.bak "s/sk-your-moonshot-api-key-here/$api_key/g" "$CONFIG_DIR/.env"
+            sed -i.bak "s/YOUR_MOONSHOT_API_KEY_HERE/$api_key/g" "$CONFIG_DIR/.env"
             rm "$CONFIG_DIR/.env.bak" 2>/dev/null || true
             chmod 600 "$CONFIG_DIR/.env"
             
@@ -202,7 +202,7 @@ setup_global_config() {
 {
   "model": "sonnet",
   "env": {
-    "ANTHROPIC_AUTH_TOKEN": "\$(cat $CONFIG_DIR/api_key 2>/dev/null || echo 'sk-your-key-here')",
+    "ANTHROPIC_AUTH_TOKEN": "\$(cat $CONFIG_DIR/api_key 2>/dev/null || echo 'YOUR_API_KEY-here')",
     "ANTHROPIC_BASE_URL": "https://api.moonshot.ai/anthropic/"
   }
 }

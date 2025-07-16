@@ -31,7 +31,7 @@ if [[ ! -f "$PROJECT_CLAUDE_HOME/.claude/settings.json" ]]; then
 {
   "model": "sonnet",
   "env": {
-    "ANTHROPIC_AUTH_TOKEN": "sk-your-moonshot-api-key-here",
+    "ANTHROPIC_AUTH_TOKEN": "YOUR_MOONSHOT_API_KEY_HERE",
     "ANTHROPIC_BASE_URL": "https://api.moonshot.ai/anthropic/"
   }
 }

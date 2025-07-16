@@ -290,7 +290,7 @@ show_summary() {
         echo
         echo "Common fixes:"
         echo "  • Install Claude Code: https://docs.anthropic.com/en/docs/claude-code/quickstart"
-        echo "  • Set API key: echo 'sk-your-key' > $CONFIG_DIR/api_key"
+        echo "  • Set API key: echo 'YOUR_API_KEY' > $CONFIG_DIR/api_key"
         echo "  • Run installer: ./install.sh"
     fi
 }

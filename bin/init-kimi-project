@@ -105,12 +105,12 @@ setup_api_key() {
             
             # Update settings file and create .env file
             if [[ -n "$global_key" ]]; then
-                sed -i.bak "s/sk-your-moonshot-api-key-here/$global_key/g" "$settings_file"
+                sed -i.bak "s/YOUR_MOONSHOT_API_KEY_HERE/$global_key/g" "$settings_file"
                 rm "$settings_file.bak" 2>/dev/null || true
                 
                 # Create .env file from template
                 cp "$PROJECT_DIR/.env.example" "$PROJECT_DIR/.env"
-                sed -i.bak "s/sk-your-moonshot-api-key-here/$global_key/g" "$PROJECT_DIR/.env"
+                sed -i.bak "s/YOUR_MOONSHOT_API_KEY_HERE/$global_key/g" "$PROJECT_DIR/.env"
                 sed -i.bak "s/my-project/$PROJECT_NAME/g" "$PROJECT_DIR/.env"
                 rm "$PROJECT_DIR/.env.bak" 2>/dev/null || true
                 chmod 600 "$PROJECT_DIR/.env"
@@ -123,12 +123,12 @@ setup_api_key() {
             read -r project_key
             
             if [[ "$project_key" =~ ^sk- ]]; then
-                sed -i.bak "s/sk-your-moonshot-api-key-here/$project_key/g" "$settings_file"
+                sed -i.bak "s/YOUR_MOONSHOT_API_KEY_HERE/$project_key/g" "$settings_file"
                 rm "$settings_file.bak" 2>/dev/null || true
                 
                 # Create .env file from template
                 cp "$PROJECT_DIR/.env.example" "$PROJECT_DIR/.env"
-                sed -i.bak "s/sk-your-moonshot-api-key-here/$project_key/g" "$PROJECT_DIR/.env"
+                sed -i.bak "s/YOUR_MOONSHOT_API_KEY_HERE/$project_key/g" "$PROJECT_DIR/.env"
                 sed -i.bak "s/my-project/$PROJECT_NAME/g" "$PROJECT_DIR/.env"
                 rm "$PROJECT_DIR/.env.bak" 2>/dev/null || true
                 chmod 600 "$PROJECT_DIR/.env"

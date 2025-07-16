@@ -64,7 +64,7 @@ main() {
     log_success "Remote installation complete!"
     echo
     echo "Next steps:"
-    echo "  1. Set your API key: echo 'sk-your-key' > ~/.kimi-claude/api_key"
+    echo "  1. Set your API key: echo 'YOUR_API_KEY' > ~/.kimi-claude/api_key"
     echo "  2. Run: kimi-claude --check"
     echo "  3. Start coding: kimi-claude"
 }

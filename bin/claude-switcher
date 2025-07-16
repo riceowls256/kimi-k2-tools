@@ -73,7 +73,7 @@ switch_to_kimi() {
     else
         echo "No Kimi K2 API key found."
         echo "Please set your API key first:"
-        echo "  echo 'sk-your-key' > $KIMI_CONFIG_DIR/api_key"
+        echo "  echo 'YOUR_API_KEY' > $KIMI_CONFIG_DIR/api_key"
         exit 1
     fi
     

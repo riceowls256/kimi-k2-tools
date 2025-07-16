@@ -67,8 +67,8 @@ if [[ -z "${ANTHROPIC_AUTH_TOKEN:-}" ]]; then
         log_error "No API key found. Set ANTHROPIC_AUTH_TOKEN environment variable or create $DEFAULT_API_KEY_FILE"
         echo "To set up your API key:"
         echo "  1. Get your key from https://platform.moonshot.ai/"
-        echo "  2. Run: echo 'sk-your-key' > $DEFAULT_API_KEY_FILE"
-        echo "  3. Or export ANTHROPIC_AUTH_TOKEN='sk-your-key'"
+        echo "  2. Run: echo 'YOUR_API_KEY' > $DEFAULT_API_KEY_FILE"
+        echo "  3. Or export ANTHROPIC_AUTH_TOKEN='YOUR_API_KEY'"
         exit 1
     fi
 fi
