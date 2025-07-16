@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Remote installation script for Kimi K2 Tools
-# Usage: bash -c "$(curl -fsSL https://raw.githubusercontent.com/yourusername/kimi-k2-tools/main/scripts/remote-install.sh)"
+# Usage: bash -c "$(curl -fsSL https://raw.githubusercontent.com/riceowls256/kimi-k2-tools/main/scripts/remote-install.sh)"
 
 set -euo pipefail
 
-REPO_URL="https://github.com/yourusername/kimi-k2-tools.git"
+REPO_URL="https://github.com/riceowls256/kimi-k2-tools.git"
 INSTALL_DIR="$HOME/.kimi-k2-tools"
 TEMP_DIR="/tmp/kimi-k2-tools-install"
 

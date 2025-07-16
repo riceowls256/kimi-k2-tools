@@ -29,7 +29,7 @@ git commit -m "feat: initial release of Kimi K2 Tools
 - Production-ready with security best practices"
 
 # Add GitHub remote (replace with your username)
-git remote add origin https://github.com/yourusername/kimi-k2-tools.git
+git remote add origin https://github.com/riceowls256/kimi-k2-tools.git
 
 # Push to GitHub
 git branch -M main
@@ -68,10 +68,10 @@ git push -u origin main
    ## 🚀 Quick Start
    ```bash
    # One-line installation
-   bash -c "$(curl -fsSL https://raw.githubusercontent.com/yourusername/kimi-k2-tools/main/scripts/remote-install.sh)"
+   bash -c "$(curl -fsSL https://raw.githubusercontent.com/riceowls256/kimi-k2-tools/main/scripts/remote-install.sh)"
    
    # Or clone and install
-   git clone https://github.com/yourusername/kimi-k2-tools.git
+   git clone https://github.com/riceowls256/kimi-k2-tools.git
    cd kimi-k2-tools && ./install.sh
    ```
 
@@ -166,7 +166,7 @@ After publishing, users can install with:
 
 ```bash
 # Remote installation
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/yourusername/kimi-k2-tools/main/scripts/remote-install.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/riceowls256/kimi-k2-tools/main/scripts/remote-install.sh)"
 ```
 
 ## 📈 Analytics

@@ -7,7 +7,7 @@ Thank you for your interest in contributing to Kimi K2 Tools! This project helps
 1. **Fork the repository**
 2. **Clone your fork**:
    ```bash
-   git clone https://github.com/yourusername/kimi-k2-tools.git
+   git clone https://github.com/riceowls256/kimi-k2-tools.git
    cd kimi-k2-tools
    ```
 3. **Test the installation**:

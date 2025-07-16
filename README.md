@@ -1,8 +1,8 @@
 # Kimi K2 Tools for Claude Code
 
-[![Test](https://github.com/yourusername/kimi-k2-tools/workflows/Test%20Kimi%20K2%20Tools/badge.svg)](https://github.com/yourusername/kimi-k2-tools/actions)
+[![Test](https://github.com/riceowls256/kimi-k2-tools/workflows/Test%20Kimi%20K2%20Tools/badge.svg)](https://github.com/riceowls256/kimi-k2-tools/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![GitHub release](https://img.shields.io/github/release/yourusername/kimi-k2-tools.svg)](https://github.com/yourusername/kimi-k2-tools/releases)
+[![GitHub release](https://img.shields.io/github/release/riceowls256/kimi-k2-tools.svg)](https://github.com/riceowls256/kimi-k2-tools/releases)
 
 A comprehensive toolkit for using **Moonshot AI's Kimi K2** as a cost-effective alternative to Anthropic's Claude API with **100x cost savings** and excellent performance.
 
@@ -116,7 +116,7 @@ kimi-k2-tools/
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/kimi-k2-tools.git
+git clone https://github.com/riceowls256/kimi-k2-tools.git
 cd kimi-k2-tools
 
 # Run automated installer
@@ -286,8 +286,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - **Documentation**: [Complete User Guide](docs/USER_GUIDE.md)
 - **Health Check**: `./monitoring/health-check.sh`
-- **Issues**: [Report bugs and request features](https://github.com/yourusername/kimi-k2-tools/issues)
-- **Discussions**: [Join community discussions](https://github.com/yourusername/kimi-k2-tools/discussions)
+- **Issues**: [Report bugs and request features](https://github.com/riceowls256/kimi-k2-tools/issues)
+- **Discussions**: [Join community discussions](https://github.com/riceowls256/kimi-k2-tools/discussions)
 - **Security**: See our [security policy](CONTRIBUTING.md#security)
 
 ## 🎉 Success Stories

@@ -81,5 +81,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - bash shell
 - curl
 
-[Unreleased]: https://github.com/yourusername/kimi-k2-tools/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/yourusername/kimi-k2-tools/releases/tag/v1.0.0
+[Unreleased]: https://github.com/riceowls256/kimi-k2-tools/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/riceowls256/kimi-k2-tools/releases/tag/v1.0.0
