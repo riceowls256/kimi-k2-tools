@@ -1,0 +1,53 @@
+#!/bin/bash
+
+# Project-specific Kimi-Claude wrapper
+# This script creates an isolated Claude Code environment for this project
+
+set -euo pipefail
+
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+PROJECT_CLAUDE_HOME="$PROJECT_ROOT/.kimi-claude-home"
+PROJECT_NAME="$(basename "$PROJECT_ROOT")"
+
+# Colors for output
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+log_info() {
+    echo -e "${BLUE}[INFO]${NC} $1"
+}
+
+log_success() {
+    echo -e "${GREEN}[SUCCESS]${NC} $1"
+}
+
+# Create project-specific Claude home
+mkdir -p "$PROJECT_CLAUDE_HOME/.claude"
+
+# Create project-specific settings if they don't exist
+if [[ ! -f "$PROJECT_CLAUDE_HOME/.claude/settings.json" ]]; then
+    cat > "$PROJECT_CLAUDE_HOME/.claude/settings.json" << 'EOF'
+{
+  "model": "sonnet",
+  "env": {
+    "ANTHROPIC_AUTH_TOKEN": "sk-your-moonshot-api-key-here",
+    "ANTHROPIC_BASE_URL": "https://api.moonshot.ai/anthropic/"
+  }
+}
+EOF
+    log_info "Created project-specific settings at $PROJECT_CLAUDE_HOME/.claude/settings.json"
+    echo "Please update the API key in the settings file"
+fi
+
+# Set HOME to project-specific directory
+export HOME="$PROJECT_CLAUDE_HOME"
+
+log_info "Using project-specific Claude environment for: $PROJECT_NAME"
+log_info "Settings: $PROJECT_CLAUDE_HOME/.claude/settings.json"
+
+# Log usage
+echo "$(date -Iseconds) PROJECT_START $PROJECT_NAME $*" >> "$PROJECT_CLAUDE_HOME/usage.log"
+
+# Execute Claude Code
+exec claude "$@"

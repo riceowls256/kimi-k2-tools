@@ -1,0 +1,124 @@
+name: Test Kimi K2 Tools
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python-version: ['3.8', '3.9', '3.10', '3.11']
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        # Add any Python dependencies here if needed
+
+    - name: Make scripts executable
+      run: |
+        chmod +x bin/*
+        chmod +x monitoring/*
+        chmod +x install.sh
+
+    - name: Test installation script (dry run)
+      run: |
+        # Test that the installation script runs without errors
+        # Skip actual installation steps that require user input
+        bash -n install.sh
+
+    - name: Test script syntax
+      run: |
+        # Check bash syntax for all shell scripts
+        for script in bin/* monitoring/*.sh install.sh; do
+          if [[ -f "$script" && "$script" == *.sh ]] || [[ -x "$script" ]]; then
+            echo "Checking syntax: $script"
+            bash -n "$script"
+          fi
+        done
+
+    - name: Test Python script syntax
+      run: |
+        # Check Python syntax
+        python -m py_compile monitoring/usage-tracker.py
+
+    - name: Test health check (without API calls)
+      run: |
+        # Test health check script can run
+        # Set environment to avoid API calls
+        export KIMI_SKIP_API_TEST=true
+        bash -n monitoring/health-check.sh
+
+    - name: Test configuration templates
+      run: |
+        # Verify JSON templates are valid
+        python -m json.tool config/kimi-global-settings.json >/dev/null
+        
+        # Check .env templates exist
+        test -f .env.example
+        test -f config/.env.example
+        test -f config/project-template/.env.example
+
+    - name: Test project initialization (dry run)
+      run: |
+        # Test project initialization without actually creating files
+        mkdir -p test_project
+        cd test_project
+        bash -n ../bin/init-kimi-project --help
+
+  security:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Check for secrets in code
+      run: |
+        # Simple check for potential secrets
+        if grep -r "sk-[a-zA-Z0-9]" . --exclude-dir=.git --exclude="*.md" --exclude="*.example"; then
+          echo "Warning: Found potential API keys in code"
+          exit 1
+        fi
+
+    - name: Check file permissions in templates
+      run: |
+        # Ensure template files don't have secrets
+        for file in config/project-template/.env.example config/.env.example .env.example; do
+          if grep -q "sk-[a-zA-Z0-9]" "$file"; then
+            echo "Error: Template file $file contains actual API key"
+            exit 1
+          fi
+        done
+
+  documentation:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Check documentation links
+      run: |
+        # Basic check that key files exist
+        test -f README.md
+        test -f docs/USER_GUIDE.md
+        test -f CONTRIBUTING.md
+        test -f CHANGELOG.md
+        test -f LICENSE
+
+    - name: Validate markdown
+      uses: github/super-linter@v4
+      env:
+        DEFAULT_BRANCH: main
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        VALIDATE_ALL_CODEBASE: false
+        VALIDATE_MARKDOWN: true

@@ -1,0 +1,7 @@
+{
+  "model": "sonnet",
+  "env": {
+    "ANTHROPIC_AUTH_TOKEN": "sk-your-moonshot-api-key-here",
+    "ANTHROPIC_BASE_URL": "https://api.moonshot.ai/anthropic/"
+  }
+}

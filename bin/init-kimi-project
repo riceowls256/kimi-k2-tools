@@ -1,0 +1,223 @@
+#!/bin/bash
+
+# Initialize Kimi K2 Configuration for New Project
+# Sets up a new project with Kimi K2 configuration
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TEMPLATE_DIR="$SCRIPT_DIR/../config/project-template"
+PROJECT_DIR="${1:-$(pwd)}"
+
+# Colors
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+YELLOW='\033[1;33m'
+BOLD='\033[1m'
+NC='\033[0m'
+
+log_info() {
+    echo -e "${BLUE}[INFO]${NC} $1"
+}
+
+log_success() {
+    echo -e "${GREEN}[SUCCESS]${NC} $1"
+}
+
+log_warn() {
+    echo -e "${YELLOW}[WARN]${NC} $1"
+}
+
+show_usage() {
+    echo "Initialize Kimi K2 Configuration for Project"
+    echo
+    echo "Usage: $0 [PROJECT_DIR]"
+    echo
+    echo "Arguments:"
+    echo "  PROJECT_DIR    Project directory (default: current directory)"
+    echo
+    echo "Examples:"
+    echo "  $0                    # Initialize current directory"
+    echo "  $0 /path/to/project   # Initialize specific directory"
+    echo "  $0 my-new-project     # Initialize new project directory"
+}
+
+check_directory() {
+    if [[ ! -d "$PROJECT_DIR" ]]; then
+        echo -n "Directory $PROJECT_DIR doesn't exist. Create it? (y/N): "
+        read -r create_dir
+        
+        if [[ "$create_dir" =~ ^[Yy]$ ]]; then
+            mkdir -p "$PROJECT_DIR"
+            log_success "Created directory: $PROJECT_DIR"
+        else
+            echo "Aborted."
+            exit 1
+        fi
+    fi
+    
+    # Convert to absolute path
+    PROJECT_DIR="$(cd "$PROJECT_DIR" && pwd)"
+    PROJECT_NAME="$(basename "$PROJECT_DIR")"
+}
+
+copy_template() {
+    log_info "Setting up Kimi K2 configuration in: $PROJECT_DIR"
+    
+    # Copy template files
+    cp -r "$TEMPLATE_DIR"/* "$PROJECT_DIR/"
+    
+    # Update CLAUDE.md with project name
+    if [[ -f "$PROJECT_DIR/CLAUDE.md" ]]; then
+        sed -i.bak "s/This project/$PROJECT_NAME/g" "$PROJECT_DIR/CLAUDE.md"
+        rm "$PROJECT_DIR/CLAUDE.md.bak" 2>/dev/null || true
+    fi
+    
+    log_success "Template files copied"
+}
+
+setup_api_key() {
+    local settings_file="$PROJECT_DIR/.claude/settings.json"
+    
+    echo
+    echo "API Key Setup:"
+    echo "1. Use existing global key"
+    echo "2. Enter project-specific key"
+    echo "3. Skip (configure later)"
+    echo
+    echo -n "Choose option (1-3) [1]: "
+    read -r key_choice
+    
+    case "${key_choice:-1}" in
+        1)
+            # Try to use global key
+            local global_key=""
+            if [[ -f "$HOME/.kimi-claude/api_key" ]]; then
+                global_key=$(cat "$HOME/.kimi-claude/api_key")
+                log_info "Using global API key"
+            elif [[ -n "${ANTHROPIC_AUTH_TOKEN:-}" ]]; then
+                global_key="$ANTHROPIC_AUTH_TOKEN"
+                log_info "Using environment API key"
+            else
+                log_warn "No global key found. You'll need to configure it manually."
+                return
+            fi
+            
+            # Update settings file and create .env file
+            if [[ -n "$global_key" ]]; then
+                sed -i.bak "s/sk-your-moonshot-api-key-here/$global_key/g" "$settings_file"
+                rm "$settings_file.bak" 2>/dev/null || true
+                
+                # Create .env file from template
+                cp "$PROJECT_DIR/.env.example" "$PROJECT_DIR/.env"
+                sed -i.bak "s/sk-your-moonshot-api-key-here/$global_key/g" "$PROJECT_DIR/.env"
+                sed -i.bak "s/my-project/$PROJECT_NAME/g" "$PROJECT_DIR/.env"
+                rm "$PROJECT_DIR/.env.bak" 2>/dev/null || true
+                chmod 600 "$PROJECT_DIR/.env"
+                
+                log_success "API key configured in settings.json and .env"
+            fi
+            ;;
+        2)
+            echo -n "Enter your Moonshot API key: "
+            read -r project_key
+            
+            if [[ "$project_key" =~ ^sk- ]]; then
+                sed -i.bak "s/sk-your-moonshot-api-key-here/$project_key/g" "$settings_file"
+                rm "$settings_file.bak" 2>/dev/null || true
+                
+                # Create .env file from template
+                cp "$PROJECT_DIR/.env.example" "$PROJECT_DIR/.env"
+                sed -i.bak "s/sk-your-moonshot-api-key-here/$project_key/g" "$PROJECT_DIR/.env"
+                sed -i.bak "s/my-project/$PROJECT_NAME/g" "$PROJECT_DIR/.env"
+                rm "$PROJECT_DIR/.env.bak" 2>/dev/null || true
+                chmod 600 "$PROJECT_DIR/.env"
+                
+                log_success "Project-specific API key configured in settings.json and .env"
+            else
+                log_warn "Invalid key format. Please edit $settings_file and .env manually"
+            fi
+            ;;
+        3)
+            log_info "Skipping API key setup"
+            log_warn "Remember to edit $settings_file and add your API key"
+            ;;
+        *)
+            log_warn "Invalid choice. Skipping API key setup"
+            ;;
+    esac
+}
+
+create_gitignore() {
+    local gitignore_file="$PROJECT_DIR/.gitignore"
+    
+    # Add Kimi K2 specific entries to .gitignore
+    local entries=(
+        "# Kimi K2 / Claude Code"
+        ".env"
+        ".claude/memory/"
+        ".claude/cache/"
+        "*.claude-session"
+        "api_key"
+        ".kimi-claude-home/"
+    )
+    
+    for entry in "${entries[@]}"; do
+        if [[ -f "$gitignore_file" ]]; then
+            if ! grep -q "^${entry}$" "$gitignore_file" 2>/dev/null; then
+                echo "$entry" >> "$gitignore_file"
+            fi
+        else
+            echo "$entry" >> "$gitignore_file"
+        fi
+    done
+    
+    log_success "Updated .gitignore with Kimi K2 entries"
+}
+
+show_next_steps() {
+    echo
+    echo -e "${BOLD}🎉 Project initialized with Kimi K2!${NC}"
+    echo
+    echo -e "${BOLD}Next steps:${NC}"
+    echo "1. cd $PROJECT_DIR"
+    echo "2. claude    # Start Claude Code with Kimi K2"
+    echo
+    echo -e "${BOLD}Available commands:${NC}"
+    echo "  claude               # Start Claude Code (uses Kimi K2)"
+    echo "  kimi-usage --report  # View usage reports"
+    echo "  kimi-dashboard       # Monitor costs"
+    echo
+    echo -e "${BOLD}Configuration files created:${NC}"
+    echo "  .env                  # Environment variables (keep secure!)"
+    echo "  .env.example          # Template for .env file"
+    echo "  .claude/settings.json # Claude Code configuration"
+    echo "  CLAUDE.md            # Project documentation"
+    echo "  .gitignore           # Updated with Kimi K2 entries"
+    echo
+    echo -e "${BOLD}Cost savings:${NC}"
+    echo "  💰 100x cheaper input tokens (\$0.15 vs \$15.00 per 1M)"
+    echo "  💰 30x cheaper output tokens (\$2.50 vs \$75.00 per 1M)"
+    echo "  🚀 Similar performance (65.8% SWE-bench score)"
+}
+
+main() {
+    if [[ "${1:-}" == "--help" ]] || [[ "${1:-}" == "-h" ]]; then
+        show_usage
+        exit 0
+    fi
+    
+    echo -e "${BOLD}${BLUE}"
+    echo "╔═══════════════════════════════════════════════════════════════╗"
+    echo "║              Initialize Kimi K2 Project                      ║"
+    echo "╚═══════════════════════════════════════════════════════════════╝"
+    echo -e "${NC}"
+    
+    check_directory
+    copy_template
+    setup_api_key
+    create_gitignore
+    show_next_steps
+}
+
+main "$@"

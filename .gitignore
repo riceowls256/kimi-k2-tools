@@ -1,0 +1,52 @@
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# API keys and secrets
+api_key
+*.key
+*.pem
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/
+usage.log
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+
+# Claude Code specific
+.claude/memory/
+.claude/cache/
+*.claude-session
+.kimi-claude-home/
+
+# Usage statistics
+usage_stats.json
+
+# Backup files
+*.backup
+provider-backups/
+
+# Test files
+test_*
+*.test
